@@ -30,7 +30,6 @@
   #define RGBLIGHT_HUE_STEP 8
   #define RGBLIGHT_SAT_STEP 8
   #define RGBLIGHT_VAL_STEP 8
-  #define RGBLIGHT_SLEEP
 #endif
 
 // EC11K encoders have a different resolution than other EC11 encoders.
