@@ -9,17 +9,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
     [1] = LAYOUT(
-        KC_TRNS, KC_P0, KC_P1, KC_P2, KC_P3, KC_PIPE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_BSLS,
-        KC_TRNS, KC_HASH, KC_P4, KC_P5, KC_P6, KC_GRV, KC_PLUS, KC_MINS, KC_SLSH, KC_ASTR, KC_PERC, KC_QUOT,
-        KC_TRNS, KC_PERC, KC_P7, KC_P8, KC_P9, KC_TILD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_AMPR, KC_EQL,
+        KC_TRNS, KC_0, KC_1, KC_2, KC_3, KC_PIPE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_BSLS,
+        KC_TRNS, KC_HASH, KC_4, KC_5, KC_6, KC_GRV, KC_PLUS, KC_MINS, KC_SLSH, KC_ASTR, KC_PERC, KC_QUOT,
+        KC_TRNS, KC_PERC, KC_7, KC_8, KC_9, KC_TILD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_AMPR, KC_EQL,
         KC_COMM, KC_DOT, KC_SLSH, KC_MINS, KC_TRNS, KC_TRNS, KC_TRNS, KC_SCLN, KC_EQL, KC_EQL, KC_SCLN, KC_TRNS, KC_TRNS, KC_TRNS),
 
 
     [2] = LAYOUT(
-        KC_TRNS, KC_CIRC, KC_PAST, KC_PPLS, KC_PEQL, KC_AMPR, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_TRNS, KC_TRNS,
+        KC_EXLM, KC_CIRC, KC_PAST, KC_PPLS, KC_PEQL, KC_AMPR, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_TRNS, KC_TRNS,
         KC_EQL, KC_TILD, KC_LCBR, KC_LBRC, KC_LPRN, KC_LT, KC_GT, KC_RPRN, KC_RBRC, KC_RCBR, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_PERC, KC_GRV, KC_QUOT, KC_SCLN, KC_QUES, KC_TRNS, KC_TRNS, KC_UNDS, KC_DQUO, KC_MINS, KC_COLN,
-        KC_PIPE, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
+        KC_EXLM, KC_PERC, KC_GRV, KC_QUOT, KC_SCLN, KC_QUES, KC_TRNS, KC_TRNS, KC_UNDS, KC_DQUO, KC_MINS, KC_COLN,
+        KC_PIPE, KC_TRNS, KC_TRNS, KC_EXLM, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
 // Lifted from Thomas' config.
 /*
@@ -49,21 +49,25 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
 }
 
-static void render_status(void) {
-    oled_write_P(PSTR("       Kyria rev1.0\n\n"), false);
+static void render_mccarthy(void) {
+    static const char PROGMEM mccarthy[] = {
+#include "mccarthy.txt"
+    };
+    oled_write_raw_P(mccarthy, sizeof(mccarthy));
+}
 
-    // Host Keyboard LED Status
-    uint8_t led_usb_state = host_keyboard_leds();
-    oled_write_P(IS_LED_ON(led_usb_state, USB_LED_NUM_LOCK)    ? PSTR("NUMLCK ") : PSTR("       "), false);
-    oled_write_P(IS_LED_ON(led_usb_state, USB_LED_CAPS_LOCK)   ? PSTR("CAPLCK ") : PSTR("       "), false);
-    oled_write_P(IS_LED_ON(led_usb_state, USB_LED_SCROLL_LOCK) ? PSTR("SCRLCK ") : PSTR("       "), false);
+static void render_sicp(void) {
+    static const char PROGMEM sicp[] = {
+#include "sicp.txt"
+    };
+    oled_write_raw_P(sicp, sizeof(sicp));
 }
 
 void oled_task_user(void) {
     if (is_keyboard_master()) {
-        render_status(); // Renders the current keyboard state (layer, lock, caps, scroll, etc)
+        render_mccarthy(); // Renders the current keyboard state (layer, lock, caps, scroll, etc)
     } else {
-        oled_write_P(PSTR("HI\n"), false);
+        render_sicp();
     }
 }
 

@@ -17,6 +17,8 @@
 
 #ifdef OLED_DRIVER_ENABLE
   #define OLED_DISPLAY_128X64
+  #define OLED_TIMEOUT 0
+  #define OLED_SCROLL_TIMEOUT 10000
 #endif
 
 #ifdef RGBLIGHT_ENABLE
